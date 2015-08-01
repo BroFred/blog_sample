@@ -1,0 +1,12 @@
+var express=require('express');
+var app=express();
+var mongoose= require('mongoose');
+mongoose.connect('mongodb://localhost/test');
+var passport = require('./strategy.js').passport;
+var expressSession = require('express-session');
+app.use(expressSession({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
+var router=require('./Auth_router').router;
+app.use('/auth',router); 
+exports.app=app;
