@@ -2,19 +2,25 @@ module.exports=function(passport){
 	var express=require('express');
 	var bodyPaser=require('body-parser');
 	var flash=require('connect-flash');
-	/*
-	var isAuthenticate=function(req,res,next){
+	var alreadylogin=function(req,res,next){
 		if (req.isAuthenticated()){
-			return next();
+			res.redirect('/auth/welcome');
 		}
-  		res.redirect('/');
+		else{
+			next();
+		}
 	}
-	*/ //expect move to request router
 	var urlbody=bodyPaser.urlencoded({ extended: false }); //passport won't auto parse
 	var router = express.Router();
+	router.get('/login',flash(),alreadylogin,function(req,res){
+		res.render('login',{message:req.flash('message')});
+	});
+	router.get('/signin',flash(),function(req,res){
+		res.render('signin',{message:req.flash('message')});
+	});
 	router.post('/login',urlbody,flash(),passport.authenticate('login', {
-	    successRedirect: '/',
-	    failureRedirect: '/',
+	    successRedirect: 'welcome',
+	    failureRedirect: 'login',
 	    failureFlash : true 
   	}));
   	router.get('/signout',flash(),function(req,res) {
@@ -22,11 +28,12 @@ module.exports=function(passport){
 	  res.redirect('/');
 	});
   	router.post('/signup', urlbody,flash(),passport.authenticate('signup', {
-	    successRedirect: '/',
-	    failureRedirect: '/',
+	    successRedirect: 'welcome',
+	    failureRedirect: 'signin',
 	    failureFlash : true 
   	}));
-  	//expect redirect fix (flash message)
-  	//expect add signin login  home page and signout button
+  	router.get('/welcome',function(req,res){
+  		res.render('welcome',{username:req.user.username,email:req.user.email});
+  	});
 	return router;
 }

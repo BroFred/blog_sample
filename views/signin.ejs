@@ -1,0 +1,12 @@
+<div class="signin ">
+      <h1>Sign page</h1>
+      <% if(message){%>
+      	<div><%=message%></div>
+      <%}%>
+      <form method="post" action="/auth/signup">
+        <p><input type="text" name="username" value="" placeholder="Username or Email"></p>
+        <p><input type="password" name="password" value="" placeholder="Password"></p>
+        <p><input type="email" name="email" value="" placeholder="Email"></p>
+        <button type='submit'>submit</button>
+      </form>
+</div>
