@@ -1339,6 +1339,11 @@
         }
       }
     },
+    "q": {
+      "version": "1.4.1",
+      "from": "q@*",
+      "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz"
+    },
     "supertest": {
       "version": "1.0.1",
       "from": "https://registry.npmjs.org/supertest/-/supertest-1.0.1.tgz",

@@ -2,7 +2,7 @@ var passport=require('passport');
 var LocalStrategy=require('passport-local').Strategy;
 var User=require('./schema.js').user;
 var bcrypt=require('bcrypt');
-
+var Q=require('q');
 //------------------------>
 passport.serializeUser(function(user, done) {
   done(null, user._id);
@@ -19,7 +19,7 @@ find(user_id,user);
 user --> req.user
 */
 //---> signUp strategy
-passport.use('signup',new LocalStrategy({ passReqToCallback : true},
+passport.use('signup',new LocalStrategy({usernameField: 'username',passwordField: 'password', passReqToCallback : true},
 	function(req,username,password,done){
 		var saveUser=function(){
 			User.findOne({'username':username},function(err,user){
@@ -34,42 +34,32 @@ passport.use('signup',new LocalStrategy({ passReqToCallback : true},
 				else{
 					var NewUser = new User(); 
 					NewUser.username=username;
-					//----> hash password start 
-					bcrypt.genSalt(10,function(erro,salt){
-						if(erro){
-							console.log('hash erro');
-							return done(erro);
-						}
-						else{
-							bcrypt.hash(password,salt,function(erro,hash){
-								if(erro){
-									console.log('hash erro');
-									return done(erro);
-								}
-								else{
-									NewUser.password=hash;
-								}
-							});
-						}
-					});
-					//----> hash password end
-					NewUser.email=req.params.email;
-					bcrypt.hash(email, 8, function(err, hash) {
+					NewUser.email=req.body.email||'';
+					NewUser.posts=[];
+					//-->convert node style to Q
+					var bcryptSalt = Q.denodeify(bcrypt.genSalt);
+					var bcrypthash = Q.denodeify(bcrypt.hash);
+					var saveDb=Q.denodeify(NewUser.save);
+					//-->convert node style to Q
+					bcryptSalt(10).then(function(salt){
+						return bcrypthash(password,salt);
+						
+					})
+					.then(function(hash){
+						NewUser.password=hash;
+						return bcrypthash(NewUser.email,1)
+					})
+					.then(function(hash) {
 						NewUser.link=hash;
+						return saveDb();
+					})
+					.then(function(){
+						//---->newuser save start
+						return done(null,NewUser);
+						//--->new user save end
 					});
-					//---->newuser save start
-					NewUser.save(function(err){
-						if(err){
-							conosole.log('save erro');
-							return done(err);
-						}
-						else{
-							return done(null,NewUser);
-						}
-					});
-					//--->new user save end
 				}
-			});
+			}); 
 		};
 		process.nextTick(saveUser);
 	})
@@ -90,9 +80,11 @@ passport.use('login',new LocalStrategy({ usernameField: 'username',passwordField
 			else{
 				bcrypt.compare(password,user.password,function(erro,res){
 					if(res){
+						console.log('login success');
 						done(null,user);
 					}
 					else{
+						console.log('wrong password');
 						done(null,false,req.flash('message','wrong password'));
 					}
 				});
