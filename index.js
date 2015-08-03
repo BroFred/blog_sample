@@ -11,6 +11,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 var router=require('./Auth_router')(passport);
 var prouter=require('./protectedRouter').router;
-app.use(prouter);
+app.use('/private',prouter);
 app.use('/auth',router); 
 exports.app=app;

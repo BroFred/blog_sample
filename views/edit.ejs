@@ -1,3 +1,8 @@
 <%if(message){%>
 <div><%=message%></div>
 <%}%>
+<form action="/private/post" method='post',id="usrform">
+ <p>Title:<input type="text" name="title" value="" placeholder="Title"></p>
+ <textarea name="body" name="body" value="" placeholder='Enter text here...'></textarea>
+<input type="submit">
+</form>

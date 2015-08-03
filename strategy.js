@@ -1,6 +1,7 @@
 var passport=require('passport');
 var LocalStrategy=require('passport-local').Strategy;
 var User=require('./schema.js').user;
+var UserInfo=require('./schema.js').userInfo;
 var bcrypt=require('bcrypt');
 var Q=require('q');
 //------------------------>
@@ -32,14 +33,22 @@ passport.use('signup',new LocalStrategy({usernameField: 'username',passwordField
 					return done(null,false,req.flash('message','user already exist'));
 				}
 				else{
+					var NewUserInfo =new UserInfo();
 					var NewUser = new User(); 
 					NewUser.username=username;
+					NewUserInfo.username=username;
 					NewUser.email=req.body.email||'';
+					NewUserInfo.email=req.body.email||'';
 					NewUser.posts=[];
 					//-->convert node style to Q
 					var bcryptSalt = Q.denodeify(bcrypt.genSalt);
 					var bcrypthash = Q.denodeify(bcrypt.hash);
-					var saveDb=Q.denodeify(NewUser.save);
+					//var saveDb=Q.denodeify(NewUser.save);
+					var saveDb=function(ob){
+						var deferred=Q.defer();
+						ob.save(deferred.makeNodeResolver())
+						return deferred.promise;
+					};
 					//-->convert node style to Q
 					bcryptSalt(10).then(function(salt){
 						return bcrypthash(password,salt);
@@ -50,8 +59,12 @@ passport.use('signup',new LocalStrategy({usernameField: 'username',passwordField
 						return bcrypthash(NewUser.email,1)
 					})
 					.then(function(hash) {
+						NewUserInfo.link=hash;
 						NewUser.link=hash;
-						return saveDb();
+						return saveDb(NewUserInfo);
+					})
+					.then(function(){
+						return saveDb(NewUser);
 					})
 					.then(function(){
 						//---->newuser save start
