@@ -1,0 +1,7 @@
+<% var temp %>
+<% for(var i in posts) { 
+	temp='../postsDetail/'+posts[i][1];
+%>
+	<div><a href=<%=temp%>><%=posts[i][0]%><a></div>
+	
+<%}%>

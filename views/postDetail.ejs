@@ -1,0 +1,16 @@
+<div>Author:<%=post.username%></div>
+<div>Contact:<%=post.email%></div>
+<div>DateTime:<%=post.Editon%></div>
+<div>likes:<%=post.rating%></div>
+<div><a href=<%=temp%>>Like it !<a></div>
+<%var temp ='../../private/like/'+post._id%>
+<h1><%=post.post.title%></h1>
+<div><%=post.post.body%></div>
+
+<h3>comment:</h3>
+<form action="/private/comment" method='post',id="usrform">
+ <div><textarea name="body" name="body" value="" placeholder='Enter text here...'></textarea></div>
+<input type="submit">
+</form>
+
+

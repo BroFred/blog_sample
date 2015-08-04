@@ -10,7 +10,7 @@ var isAuthenticate=function(req,res,next){
 		next();
 	}
 	else{
-  		res.redirect('../auth/login');
+  		res.redirect('http:\/\/'+req.headers.host+'/auth/login');
   	}
 }
 router.use(flash());
@@ -35,6 +35,14 @@ router.post('/post',urlbody,function(req,res){
 	});
 	res.render('edit',{message:'post success!'})
 
+});
+router.get('/like/:id',function(req,res){
+	post.findOne({_id:req.params.id},function(erro,data){
+		data.rating++;
+		data.save(function(){
+			res.render('postDetail',{post:data});
+		});
+	});
 });
 //when post  username,Ulink,email by user. Plink post Editon comments,rating by post. rating and comments should by protected
 //---> edit post

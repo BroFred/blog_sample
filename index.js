@@ -10,7 +10,9 @@ app.use(expressSession({secret: 'mySecretKey','saveUninitialized':false,'resave'
 app.use(passport.initialize());
 app.use(passport.session());
 var router=require('./Auth_router')(passport);
-var prouter=require('./protectedRouter').router;
-app.use('/private',prouter);
-app.use('/auth',router); 
+var prouter=require('./protectedRouter').router; //private router
+var purouter=require('./publicRouter').router; //public router 
+app.use('/private',prouter); //private
+app.use('/auth',router); //authenticate
+app.use('/public',purouter); //public
 exports.app=app;
