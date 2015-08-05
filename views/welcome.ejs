@@ -1,3 +1,13 @@
 <a href="signout">Signout</a>
+<%var temp ="data:image/png;base64,"+pic%>
+<img src=<%=temp%>>
+
+<% if(message){ %> 
+<div><%=message%></div>
+<%}%>
 <div>welecome <%=username%></div>
+<form action="/private/addImage" enctype="multipart/form-data" method='post' accept-charset='UTF-8'>
+  Your profile image: <input type="file" name="pic" id="pic"><br>
+  <input type="submit" value="Submit">
+</form>
 <a href="../private/edit">Post!</a>

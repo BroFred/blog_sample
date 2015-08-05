@@ -10,10 +10,13 @@
     "ejs": "^2.3.3",
     "express": "^4.13.1",
     "express-session": "^1.11.3",
+    "formidable": "^1.0.17",
     "mongoose": "^4.1.0",
+    "multer": "^1.0.1",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
+    "stream-concat": "^0.1.0",
     "supertest": "^1.0.1"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@ module.exports=function(passport){
 	var express=require('express');
 	var bodyPaser=require('body-parser');
 	var flash=require('connect-flash');
+	var Uinfo=require('./schema.js').userInfo;
 	var alreadylogin=function(req,res,next){
 		if (req.isAuthenticated()){
 			res.redirect('/auth/welcome');
@@ -33,7 +34,14 @@ module.exports=function(passport){
 	    failureFlash : true 
   	}));
   	router.get('/welcome',function(req,res){
-  		res.render('welcome',{username:req.user.username,email:req.user.email});
+  		if(req.user){
+  		Uinfo.findOne({link:req.user.link},function(erro,data){
+  			res.render('welcome',{username:req.user.username,email:req.user.email,message:undefined,pic:data.img.data.toString('base64'),type:""});
+  		});
+  		}
+  		else{
+  			res.redirect('login');
+  		}
   	});
 	return router;
 }

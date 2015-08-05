@@ -39,6 +39,8 @@ passport.use('signup',new LocalStrategy({usernameField: 'username',passwordField
 					NewUserInfo.username=username;
 					NewUser.email=req.body.email||'';
 					NewUserInfo.email=req.body.email||'';
+					NewUserInfo.img.data="";
+					NewUserInfo.img.contentType="";
 					NewUser.posts=[];
 					//-->convert node style to Q
 					var bcryptSalt = Q.denodeify(bcrypt.genSalt);
