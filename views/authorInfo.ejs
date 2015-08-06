@@ -1,0 +1,7 @@
+<%var temp ="data:image/png;base64,"+info.img.data.toString('base64')%>
+<img src=<%=temp%>>
+<div><%=info.username%></div>
+<h3>POST:</h3>
+<%for( var i in post){ %> 
+	<div><%=post[i].post.title%></div>
+<%}%>

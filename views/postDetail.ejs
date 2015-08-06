@@ -1,14 +1,22 @@
-<div>Author:<%=post.username%></div>
+<%
+var like ='../../private/like/'+post._id;
+var comment='../../private/comment/'+post._id;
+var user='../author/'+encodeURIComponent(post.Ulink);
+%>
+<div>Author:<a href=<%=user%>><%=post.username%></a></div>
 <div>Contact:<%=post.email%></div>
 <div>DateTime:<%=post.Editon%></div>
 <div>likes:<%=post.rating%></div>
-<%var temp ='../../private/like/'+post._id%>
-<div><a href=<%=temp%>>Like it !<a></div>
+<div><a href=<%=like%>>Like it !<a></div>
 <h1><%=post.post.title%></h1>
 <div><%=post.post.body%></div>
-
 <h3>comment:</h3>
-<form action="/private/comment" method='post',id="usrform">
+<% var len=post.comments.length%>
+<%for(var i=0;i<len;i++){ %>
+	<div><%=post.comments[i].body%></div>
+	<div>by:<%=post.comments[i].username%></div>
+<%}%>
+<form action=<%=comment%> method='post' id="usrform">
  <div><textarea name="body" name="body" value="" placeholder='Enter text here...'></textarea></div>
 <input type="submit">
 </form>

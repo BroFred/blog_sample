@@ -26,6 +26,7 @@ router.post('/post',urlbody,function(req,res){
 	var Newpost=new post();
 	Newpost.post.title=req.body.title;
 	Newpost.username=req.user.username;
+	Newpost.Ulink=req.user.link;
 	Newpost.email=req.user.email;
 	Newpost.post.body=req.body.body;
 	Newpost.Editon=new Date();
@@ -65,6 +66,14 @@ router.post('/addImage',function(req,res){
 			});
 		});
     });// set form.uploadDir
+});
+router.post('/comment/:id',urlbody,function(req,res){
+	post.findOne({_id:req.params.id},function(erro,data){
+		data.comments.push({username:req.user.username,body:req.body.body,rating:0});
+		data.save(function(){
+			res.render('postDetail',{post:data});
+		});
+	});
 });
 //when post  username,Ulink,email by user. Plink post Editon comments,rating by post. rating and comments should by protected
 //---> edit post

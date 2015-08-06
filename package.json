@@ -12,19 +12,16 @@
     "express-session": "^1.11.3",
     "formidable": "^1.0.17",
     "mongoose": "^4.1.0",
-    "multer": "^1.0.1",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
-    "stream-concat": "^0.1.0",
-    "supertest": "^1.0.1"
-  },
-  "devDependencies": {
-    "mocha": "^2.2.5"
+    "stream-concat": "^0.1.0"
   },
   "scripts": {
     "test": "mocha",
-    "start": "./bin/www"
+    "prestart": "mongod --fork --logpath /dev/null",
+    "start": "./bin/www",
+     "stop": "mongo admin --eval 'db.shutdownServer()' > /dev/null"
   },
   "repository": {
     "type": "git",
@@ -35,5 +32,9 @@
   "bugs": {
     "url": "https://github.com/BroFred/blog_sample/issues"
   },
-  "homepage": "https://github.com/BroFred/blog_sample"
+  "homepage": "https://github.com/BroFred/blog_sample",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "supertest": "https://registry.npmjs.org/supertest/-/supertest-1.0.1.tgz"
+  }
 }
